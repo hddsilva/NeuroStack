@@ -1,0 +1,325 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: NeuroStack Cloudformation json - test
+Parameters:
+  BucketPrefix:
+    Type: String
+    Default: neurostack-input-
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: InternetGateway
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EC2 Security Group for instances launched in the VPC by Batch
+      VpcId:
+        Ref: VPC
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId:
+        Ref: VPC
+      MapPublicIpOnLaunch: 'True'
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: InternetGateway
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: Subnet
+  IamInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - Ref: EcsInstanceRole
+  LambdaBatchPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:PutLogEvents
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+              - batch:SubmitJob
+            Resource: arn:aws:batch:*:*:*
+  EcsInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2008-10-17'
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - >-
+          arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+  Ec2S3FullAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: s3fullaccesspolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: s3:*
+                Resource: '*'
+  BatchServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: batch.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: neurostack-launch-template
+      LaunchTemplateData:
+        ImageId: ami-0241a7b945161c81e
+        UserData: TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSI9PU1ZQk9VTkRBUlk9PSIKCi0tPT1NWUJPVU5EQVJZPT0KQ29udGVudC1UeXBlOiB0ZXh0L3gtc2hlbGxzY3JpcHQ7IGNoYXJzZXQ9InVzLWFzY2lpIgoKIyEvYmluL2Jhc2gKc3VkbyBhcHQtZ2V0IGluc3RhbGwgaXB0YWJsZXMtcGVyc2lzdGVudApzdWRvIGlwdGFibGVzIC10IG5hdCAtQSBQUkVST1VUSU5HIC1wIHRjcCAtZCAxNjkuMjU0LjE3MC4yIC0tZHBvcnQgODAgLWogRE5BVCAtLXRvLWRlc3RpbmF0aW9uIDEyNy4wLjAuMTo1MTY3OQpzdWRvIGlwdGFibGVzIC10IG5hdCAtQSBPVVRQVVQgLWQgMTY5LjI1NC4xNzAuMiAtcCB0Y3AgLW0gdGNwIC0tZHBvcnQgODAgLWogUkVESVJFQ1QgLS10by1wb3J0cyA1MTY3OQoKbWtkaXIgLXAgL2V0Yy9lY3MgJiYgc3VkbyB0b3VjaCAvZXRjL2Vjcy9lY3MuY29uZmlnCm1rZGlyIC1wIC92YXIvbG9nL2VjcyAvdmFyL2xpYi9lY3MvZGF0YQoKY2F0IDw8RU9GID4+L2V0Yy9lY3MvZWNzLmNvbmZpZwpFQ1NfREFUQURJUj0vZGF0YQpFQ1NfRU5BQkxFX1RBU0tfSUFNX1JPTEU9dHJ1ZQpFQ1NfRU5BQkxFX1RBU0tfSUFNX1JPTEVfTkVUV09SS19IT1NUPXRydWUKRUNTX0xPR0ZJTEU9L2xvZy9lY3MtYWdlbnQubG9nCkVDU19BVkFJTEFCTEVfTE9HR0lOR19EUklWRVJTPVsianNvbi1maWxlIiwiYXdzbG9ncyJdCkVDU19MT0dMRVZFTD1pbmZvCkVDU19FTkFCTEVfQVdTTE9HU19FWEVDVVRJT05ST0xFX09WRVJSSURFPXRydWUKCkVPRgoKY2F0IDw8RU9GID4+L2V0Yy9zeXN0ZW1kL3N5c3RlbS9lY3MtYWdlbnQuc2VydmljZQoKW1VuaXRdCkRlc2NyaXB0aW9uPUFXUyBFQ1MgQWdlbnQKUmVxdWlyZXM9ZG9ja2VyLnNlcnZpY2UKQWZ0ZXI9ZG9ja2VyLnNlcnZpY2UKCltTZXJ2aWNlXQpUaW1lb3V0U3RhcnRTZWM9MApSZXN0YXJ0U2VjPTEwClJlc3RhcnQ9YWx3YXlzCktpbGxNb2RlPW5vbmUKCgpFeGVjU3RhcnRQcmU9L3Vzci9iaW4vZG9ja2VyIHB1bGwgYW1hem9uL2FtYXpvbi1lY3MtYWdlbnQ6bGF0ZXN0CkV4ZWNTdGFydD0vdXNyL2Jpbi9kb2NrZXIgcnVuIC0tbmFtZSAlbiBcCi0tcmVzdGFydD1vbi1mYWlsdXJlOjEwIFwKLS12b2x1bWU9L3Zhci9ydW4vZG9ja2VyLnNvY2s6L3Zhci9ydW4vZG9ja2VyLnNvY2sgXAotLXZvbHVtZT0vdmFyL2xvZy9lY3M6L2xvZyBcCi0tdm9sdW1lPS92YXIvbGliL2Vjcy9kYXRhOi9kYXRhIFwKLS1uZXQ9aG9zdCBcCi0tZW52LWZpbGU9L2V0Yy9lY3MvZWNzLmNvbmZpZyBcCi0tZW52PUVDU19MT0dGSUxFPS9sb2cvZWNzLWFnZW50LmxvZyBcCi0tZW52PUVDU19EQVRBRElSPS9kYXRhLyBcCi0tZW52PUVDU19FTkFCTEVfVEFTS19JQU1fUk9MRT10cnVlIFwKLS1lbnY9RUNTX0VOQUJMRV9UQVNLX0lBTV9ST0xFX05FVFdPUktfSE9TVD10cnVlIFwKLS1lbnY9RUNTX0lNQUdFX0NMRUFOVVBfSU5URVJWQUw9MTBtIFwKLS1lbnY9RUNTX0lNQUdFX01JTklNVU1fQ0xFQU5VUF9BR0U9MjBtIFwKLS1lbnY9RUNTX0VOR0lORV9UQVNLX0NMRUFOVVBfV0FJVF9EVVJBVElPTj0xaCBcCi0tZW52PUVDU19OVU1fSU1BR0VTX0RFTEVURV9QRVJfQ1lDTEU9MTAgXAphbWF6b24vYW1hem9uLWVjcy1hZ2VudDpsYXRlc3QKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldApFT0YKCnN5c3RlbWN0bCBlbmFibGUgLS1ub3cgLS1uby1ibG9jayBlY3MtYWdlbnQuc2VydmljZQotLT09TVlCT1VOREFSWT09LS0=
+  ScriptBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      AccessControl: Private
+      BucketName:
+        Fn::Sub: neurostack-script-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+  OutputBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      AccessControl: Private
+      BucketName:
+        Fn::Sub: neurostack-output-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+  InputBucket:
+    DependsOn: LambdaPermission
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName:
+        Fn::Sub: neurostack-input-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Function:
+              Fn::GetAtt:
+                - LambdaFunction
+                - Arn
+            Event: s3:ObjectCreated:*
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+          - LambdaFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::Sub: arn:aws:s3:::${BucketPrefix}${AWS::AccountId}
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: neurostack-lambda
+      Runtime: python3.8
+      PackageType: Zip
+      Handler: index.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Code:
+        ZipFile: |
+                  import boto3
+                  def lambda_handler(event, context):
+                        client = boto3.client('batch', 'us-east-1')
+                        filename = event['Records'][0]['s3']['object']['key']
+                        print(filename)
+                        basic_job = client.submit_job(
+                            jobName='neurostack-job',
+                            jobQueue='neurostack-jobqueue',
+                            jobDefinition='neurostack-jobdefinition',
+                            containerOverrides={
+                                'environment': [
+                                    {
+                                        'name': 'FileName',
+                                        'value': filename
+                                    }
+                                ]         
+                            }
+                        )
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - Ref: LambdaBatchPolicy
+  ComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      ComputeEnvironmentName: neurostack-spot-computeenvironment
+      Type: MANAGED
+      ComputeResources:
+        Type: SPOT
+        AllocationStrategy: SPOT_CAPACITY_OPTIMIZED
+        MinvCpus: 0
+        DesiredvCpus: 0
+        MaxvCpus: 256
+        LaunchTemplate:
+            LaunchTemplateName: neurostack-launch-template
+        InstanceTypes:
+          - optimal
+        Subnets:
+          - Ref: Subnet
+        SecurityGroupIds:
+          - Ref: SecurityGroup
+        InstanceRole:
+          Ref: IamInstanceProfile
+      ServiceRole:
+        Ref: BatchServiceRole
+  ComputeEnvironment2:
+    Type: AWS::Batch::ComputeEnvironment
+    Properties:
+      ComputeEnvironmentName: neurostack-ondemand-computeenvironment
+      Type: MANAGED
+      ComputeResources:
+        Type: EC2
+        AllocationStrategy: BEST_FIT
+        MinvCpus: 0
+        DesiredvCpus: 0
+        MaxvCpus: 256
+        LaunchTemplate:
+            LaunchTemplateName: neurostack-launch-template
+        InstanceTypes:
+          - optimal
+        LaunchTemplate:
+          LaunchTemplateName: neurostack-launch-template
+        Subnets:
+          - Ref: Subnet
+        SecurityGroupIds:
+          - Ref: SecurityGroup
+        InstanceRole:
+          Ref: IamInstanceProfile
+      ServiceRole:
+        Ref: BatchServiceRole
+  JobQueue:
+    Type: AWS::Batch::JobQueue
+    Properties:
+      JobQueueName: neurostack-jobqueue
+      Priority: 1
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment:
+            Ref: ComputeEnvironment
+  JobDefinition:
+    Type: AWS::Batch::JobDefinition
+    Properties:
+      JobDefinitionName: neurostack-jobdefinition
+      Type: container
+      ContainerProperties:
+        Image: public.ecr.aws/v8l0a1m9/neurostack_fetchrun:latest
+        JobRoleArn:
+          Fn::GetAtt:
+            - Ec2S3FullAccessRole
+            - Arn
+        Vcpus: 4
+        Memory: 10000
+        Command:
+          - neurostack_script.sh
+        Volumes:
+          - Host:
+              SourcePath: /maget
+            Name: ebs
+        MountPoints:
+          - ContainerPath: /maget
+            ReadOnly: false
+            SourceVolume: ebs
+        Environment:
+          - Name: BATCH_FILE_S3_URL
+            Value:
+              Fn::Sub: s3://neurostack-script-${AWS::AccountId}/neurostack_script.sh
+          - Name: BATCH_FILE_TYPE
+            Value: script
+      RetryStrategy:
+        Attempts: 1
