@@ -309,12 +309,12 @@ Resources:
           - neurostack_script.sh
         Volumes:
           - Host:
-              SourcePath: /maget
-            Name: ebs
+              SourcePath: /usr/local
+            Name: local
         MountPoints:
-          - ContainerPath: /maget
+          - ContainerPath: /nitrc
             ReadOnly: false
-            SourceVolume: ebs
+            SourceVolume: local
         Environment:
           - Name: BATCH_FILE_S3_URL
             Value:

@@ -6,7 +6,7 @@ RUN yum update -y \
   && unzip awscli-exe-linux-x86_64.zip \
   && ./aws/install
 
-RUN aws --version
+RUN yum -y install tcsh
   
 ADD fetch_and_run_mod.sh /usr/bin/fetch_and_run_mod.sh
 
