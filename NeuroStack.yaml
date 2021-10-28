@@ -309,7 +309,7 @@ Resources:
           - neurostack_script.sh
         Volumes:
           - Host:
-              SourcePath: /usr/local
+              SourcePath: /
             Name: local
         MountPoints:
           - ContainerPath: /nitrc

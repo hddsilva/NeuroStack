@@ -9,5 +9,7 @@ RUN yum update -y \
 RUN yum -y install tcsh
   
 ADD fetch_and_run_mod.sh /usr/bin/fetch_and_run_mod.sh
+ADD bashrc /nitrc/home/ubuntu/.bashrc
+ADD profile /nitrc/home/ubuntu/.profile
 
 ENTRYPOINT ["/usr/bin/fetch_and_run_mod.sh"]
