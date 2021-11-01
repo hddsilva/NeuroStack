@@ -238,7 +238,7 @@ Resources:
   ComputeEnvironment:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
-      ComputeEnvironmentName: neurostack-spot-computeenvironment
+      ComputeEnvironmentName: neurostack-spot
       Type: MANAGED
       ComputeResources:
         Type: SPOT
@@ -261,7 +261,7 @@ Resources:
   ComputeEnvironment2:
     Type: AWS::Batch::ComputeEnvironment
     Properties:
-      ComputeEnvironmentName: neurostack-ondemand-computeenvironment
+      ComputeEnvironmentName: neurostack-ondemand
       Type: MANAGED
       ComputeResources:
         Type: EC2
