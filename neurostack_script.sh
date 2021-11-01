@@ -8,6 +8,7 @@ aSub=$(echo ${FileName}| cut -d. -f1)
 
 export PATH="/nitrc/usr/local/freesurfer/bin:$PATH"
 echo "$PATH"
+source /nitrc/home/ubuntu/.bashrc
 
 echo "Processing subject ${aSub}"
 echo "Args: $@"
@@ -16,9 +17,18 @@ echo "jobQueue: $AWS_BATCH_JQ_NAME"
 echo "computeEnvironment: $AWS_BATCH_CE_NAME"
 
 # --------------- Start user-modified script ---------------
+#echo "Installing Dev Tools"
+#yum -y groupinstall "Development Tools"
+echo "Checking gcc"
+gcc --version
 
-echo "Checking FREESURFER_HOME"
-cd $FREESURFER_HOME
+#yum -y install bc
+bc <<< 10*25
+#yum -y install libgomp1
+
+export FREESURFER_HOME=/nitrc/usr/local/freesurfer
+echo "Checking FREESURFER_HOME: $FREESURFER_HOME"
+source $FREESURFER_HOME/SetUpFreeSurfer.sh
 
 echo "Copying input data onto the instance"
 aws s3 cp s3://neurostack-input-${accountID}/ $FREESURFER_HOME/ --recursive --exclude "*" --include "${aSub}.nii"
