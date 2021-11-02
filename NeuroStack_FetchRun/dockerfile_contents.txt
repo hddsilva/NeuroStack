@@ -11,7 +11,7 @@ RUN yum -y install bc
 RUN yum -y groupinstall "Development Tools"
   
 ADD fetch_and_run_mod.sh /usr/bin/fetch_and_run_mod.sh
-ADD bashrc /nitrc/home/bashrc
-ADD profile /nitrc/home/profile
+ADD bashrc /tmp/bashrc
+ADD profile /tmp/profile
 
 ENTRYPOINT ["/usr/bin/fetch_and_run_mod.sh"]
