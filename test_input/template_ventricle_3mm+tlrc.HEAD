@@ -1,0 +1,121 @@
+
+type = string-attribute
+name = HISTORY_NOTE
+count = 2474
+'[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] ===================================\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] === History of inputs to 3dcalc ===\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] === Input a:\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] [rhdesai@moe: Tue Jun 21 13:25:58 2011] 3dTcat -prefix tcat.nii destrieux.desai_prob.at_TT_N27.bl6.t5.nii.gz fs.subcortical.desai_prob.at_TT_N27.bl6.t5.nii.gz\n[rhdesai@moe: Tue Jun 21 13:27:16 2011] 3dTstat -argmax1 -prefix destrieux.desai_prob.at_subcortical_TT_N27.bl6.max.nii tcat.nii.gz\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] === Input b:\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] [dglen@gollum.nimh.nih.gov: Mon Aug 15 17:37:21 2011] 3dTcat -prefix temp_tcat_dd_fs /Users/dglen/abin/TT_desai_ddpmaps+tlrc. /Users/dglen/abin/TT_desai_fspmaps+tlrc.\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:00 2011] 3dTstat -max -prefix temp_ts_dd_fs_max temp_tcat_dd_fs+tlrc\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] ===================================\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:11 2011] 3dcalc -byte -nscale -a destrieux.desai_prob.at_subcortical_TT_N27.bl6.max.nii.gz -b temp_ts_dd_fs_max+tlrc -expr 'a*step(b)' -prefix TT_desai_dd_mpm\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:38 2011] 3drefit -atrstring ATLAS_LABEL_TABLE file:ddmpm.niml TT_desai_dd_mpm+tlrc\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:39 2011] 3drefit -cmap INT_CMAP TT_desai_dd_mpm+tlrc\n[dglen@gollum.nimh.nih.gov: Mon Aug 15 17:38:39 2011] 3drefit -space TT_N27 TT_desai_dd_mpm+tlrc\n[dglen@gollum.nimh.nih.gov: Fri May 11 13:23:06 2012] 3drefit -space TT_N27 /Volumes/elrond/pub/dist/atlases/current/TT_N27.HEAD /Volumes/elrond/pub/dist/atlases/current/TT_desai_dd_mpm+tlrc.HEAD /Volumes/elrond/pub/dist/atlases/current/TT_desai_ddpmaps+tlrc.HEAD /Volumes/elrond/pub/dist/atlases/current/TT_desai_dk_mpm+tlrc.HEAD /Volumes/elrond/pub/dist/atlases/current/TT_desai_dkpmaps+tlrc.HEAD /Volumes/elrond/pub/dist/atlases/current/TT_desai_fspmaps+tlrc.HEAD\n[hm437@c15n08.farnam.hpc.yale.internal: Tue Dec  7 15:25:54 2021] {AFNI_19.1.26:linux_openmp_64} 3dcalc -a /home/hm437/abin/TT_desai_dd_mpm+tlrc -expr 'amongst(a,152,170)' -prefix template_ventricle\n[hm437@c15n08.farnam.hpc.yale.internal: Tue Dec  7 15:25:55 2021] {AFNI_19.1.26:linux_openmp_64} 3dresample -dxyz 3 3 3 -inset template_ventricle+tlrc -prefix template_ventricle_3mm~
+
+type = string-attribute
+name = TYPESTRING
+count = 15
+'3DIM_HEAD_ANAT~
+
+type = string-attribute
+name = IDCODE_STRING
+count = 27
+'AFN_68yqcux3PXZ3BFQIrTRHqA~
+
+type = string-attribute
+name = IDCODE_DATE
+count = 25
+'Tue Dec  7 15:25:55 2021~
+
+type = integer-attribute
+name = SCENE_DATA
+count = 8
+ 2 2 0 -999 -999
+ -999 -999 -999
+
+type = string-attribute
+name = LABEL_1
+count = 5
+'zyxt~
+
+type = string-attribute
+name = LABEL_2
+count = 5
+'zyxt~
+
+type = string-attribute
+name = DATASET_NAME
+count = 5
+'zyxt~
+
+type = integer-attribute
+name = ORIENT_SPECIFIC
+count = 3
+ 0 3 4
+
+type  = float-attribute
+name  = ORIGIN
+count = 3
+          -79.5          -79.5          -63.5
+
+type  = float-attribute
+name  = DELTA
+count = 3
+              3              3              3
+
+type  = float-attribute
+name  = IJK_TO_DICOM
+count = 12
+              3              0              0          -79.5              0
+              3              0          -79.5              0              0
+              3          -63.5
+
+type  = float-attribute
+name  = IJK_TO_DICOM_REAL
+count = 12
+              3              0              0          -79.5              0
+              3              0          -79.5              0              0
+              3          -63.5
+
+type  = float-attribute
+name  = BRICK_STATS
+count = 2
+              0              1
+
+type = integer-attribute
+name = DATASET_RANK
+count = 8
+ 3 1 0 0 0
+ 0 0 0
+
+type = integer-attribute
+name = DATASET_DIMENSIONS
+count = 5
+ 54 64 50 0 0
+
+type = integer-attribute
+name = BRICK_TYPES
+count = 1
+ 0
+
+type  = float-attribute
+name  = BRICK_FLOAT_FACS
+count = 1
+              0
+
+type = string-attribute
+name = BRICK_LABS
+count = 9
+'ArgMax+1~
+
+type = string-attribute
+name = BRICK_KEYWORDS
+count = 1
+'~
+
+type = string-attribute
+name = TEMPLATE_SPACE
+count = 7
+'TT_N27~
+
+type = integer-attribute
+name = INT_CMAP
+count = 1
+ 0
+
+type = string-attribute
+name = BYTEORDER_STRING
+count = 10
+'LSB_FIRST~

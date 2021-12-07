@@ -6,6 +6,7 @@ RUN apt-get update && apt-get -y install python-pip \
 RUN pip install awscli
 RUN apt-get install tcsh
 RUN apt-get install bc
+RUN apt-get install libxm4
   
 ADD fetch_and_run_mod.sh /usr/bin/fetch_and_run_mod.sh
 ADD bashrc /etc/profile.d/nitrc_bashrc.sh
