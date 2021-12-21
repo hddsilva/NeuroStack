@@ -11,19 +11,19 @@
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
+    if [ -f "/nitrc/home/ubuntu/.bashrc" ]; then
+	. "/nitrc/home/ubuntu/.bashrc"
     fi
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+if [ -d "/nitrc/home/ubuntu/bin" ] ; then
+    PATH="/nitrc/home/ubuntu/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+if [ -d "/nitrc/home/ubuntu/.local/bin" ] ; then
+    PATH="/nitrc/home/ubuntu/.local/bin:$PATH"
 fi
 export NITRC_CE_VERSION=v0.53.0-AWSBATCH
 export NITRC_CE_AWS_API_KEY=r2kmIRXQzk8X0QunpTgtX5blg4sdXxHS4F8oIhGx

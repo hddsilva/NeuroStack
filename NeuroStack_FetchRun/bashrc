@@ -28,11 +28,11 @@ shopt -s checkwinsize
 #shopt -s globstar
 
 # make less more friendly for non-text input files, see lesspipe(1)
-[ -x /nitrc/usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /nitrc/etc/debian_chroot ]; then
-    debian_chroot=$(cat /nitrc/etc/debian_chroot)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
@@ -46,13 +46,13 @@ esac
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /nitrc/usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
     else
-        color_prompt=
+	color_prompt=
     fi
 fi
 
@@ -123,6 +123,7 @@ source $FSLDIR/etc/fslconf/fsl.sh
 export FSLPARALLEL=1
 export PATH=$FSLDIR/bin:$PATH
 # END ANSIBLE MANAGED BLOCK - fsl
+export LD_LIBRARY_PATH="/nitrc/lib:/nitrc/usr/lib:/nitrc/usr/lib/x86_64-linux-gnu:/nitrc/lib/x86_64-linux-gnu/"
 alias setup_cpac="source /nitrc/usr/local/bin/cpac_env.sh"
 export PATH=$PATH:/nitrc/opt/BrainSuite16a1/bin:/nitrc/opt/BrainSuite16a1/bdp
 alias brainsuite="export LD_LIBRARY_PATH=;/nitrc/opt/BrainSuite16a1/bin/BrainSuite16a1"
@@ -132,8 +133,14 @@ alias eeglab="/nitrc/opt/eeglab/run_EEGLAB.sh /nitrc/usr/local/MATLAB/MATLAB_Run
 PATH=$PATH:/nitrc/usr/lib/mrtrix3/bin
 alias setup_neurodocker="source activate neurodocker"
 export PYTHONPATH=$PYTHONPATH:/nitrc/usr/local/nrn/lib/python
-alias spm="export LD_LIBRARY_PATH=.:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/nitrc/usr/local/MA$
+alias spm="export LD_LIBRARY_PATH=.:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/sys/opengl/lib/glnxa64;/nitrc/opt/spm12/spm12"
 # BEGIN ANSIBLE MANAGED BLOCK - freesurfer
 export FREESURFER_HOME=/nitrc/usr/local/freesurfer
 source $FREESURFER_HOME/SetUpFreeSurfer.sh > /dev/null
 # END ANSIBLE MANAGED BLOCK - freesurfer
+# BEGIN ANSIBLE MANAGED BLOCK - afni
+export PATH="/nitrc/usr/lib/afni/bin:$PATH"
+export LD_LIBRARY_PATH="/nitrc/usr/lib/afni/lib:$LD_LIBRARY_PATH"
+ln -s /nitrc/usr/lib/x86_64-linux-gnu/libgsl.so.23 /nitrc/usr/lib/x86_64-linux-gnu/libgsl.so.19
+# END ANSIBLE MANAGED BLOCK - afni
+
