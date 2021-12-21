@@ -26,7 +26,6 @@ if [ -d "/nitrc/home/ubuntu/.local/bin" ] ; then
     PATH="/nitrc/home/ubuntu/.local/bin:$PATH"
 fi
 export NITRC_CE_VERSION=v0.53.0-AWSBATCH
-export NITRC_CE_AWS_API_KEY=r2kmIRXQzk8X0QunpTgtX5blg4sdXxHS4F8oIhGx
 export NITRC_CE_AWS_API_ENDPOINT=https://t1nn87w4yl.execute-api.us-east-1.amazonaws.com/prod/
 export NITRC_CE_DOCKER_HOST_IP=172.17.0.1
 export NITRC_CE_DOCKER_HOST_IP=172.17.0.1
