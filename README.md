@@ -1,4 +1,4 @@
-![alt text](https://github.com/hddsilva/NeuroStack/blob/main/logo_NeuroStack.png=250x250)
+![](https://github.com/hddsilva/NeuroStack/blob/main/logo_NeuroStack.png?v=4&s=200)
 
 NeuroStack allows you to easily run neuroimaging workflows using AWS cloud computing. It is designed to set up the AWS infrastructure needed to perform neuroimaging analysis at scale. NeuroStack is built with the NITRC Compute Environment (NITRC-CE), which allows users to access all of the neuroimaging software pre-installed in NITRC-CE (see https://www.nitrc.org/projects/nitrc es/ for a complete list).
 
