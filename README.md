@@ -9,7 +9,7 @@ Although NeuroStack itself is free to install and use, the AWS resources (ie, st
 ## To Install NeuroStack in your AWS account
 
 1. Log into your AWS account
-2. Click the "Launch_NeuroStack" url under your preferred release. This will bring you to the stack creation page on AWS.
+2. Click the "Launch_NeuroStack" url under your preferred release from the NeuroStack webpage on the NITRC website https://www.nitrc.org/frs/?group_id=1548. This will bring you to the stack creation page on AWS.
 3. All specifications for NeuroStack are preset, so you do not need to modify them. Simply continue choosing "Next".
 4. On the last page, check the box to accept that IAM permissions will be created before creating the stack. NeuroStack may take several minutes to install.
 
