@@ -1,5 +1,3 @@
-<img align="center" width="200" height="170" src="https://github.com/hddsilva/NeuroStack/blob/main/logo_NeuroStack.png">
-
 <p align="center">
   <img src="https://github.com/hddsilva/NeuroStack/blob/main/logo_NeuroStack.png" width="200" height="170" />
 </p>
