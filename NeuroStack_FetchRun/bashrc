@@ -136,7 +136,7 @@ export PYTHONPATH=$PYTHONPATH:/nitrc/usr/local/nrn/lib/python
 alias spm="export LD_LIBRARY_PATH=.:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/nitrc/usr/local/MATLAB/MATLAB_Runtime/v95/sys/opengl/lib/glnxa64;/nitrc/opt/spm12/spm12"
 # BEGIN ANSIBLE MANAGED BLOCK - freesurfer
 export FREESURFER_HOME=/nitrc/usr/local/freesurfer
-source $FREESURFER_HOME/SetUpFreeSurfer.sh > /dev/null
+source $FREESURFER_HOME/SetUpFreeSurfer.sh
 # END ANSIBLE MANAGED BLOCK - freesurfer
 # BEGIN ANSIBLE MANAGED BLOCK - afni
 export PATH="/nitrc/usr/lib/afni/bin:$PATH"
