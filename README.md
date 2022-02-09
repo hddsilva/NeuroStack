@@ -19,7 +19,7 @@ Although NeuroStack itself is free to install and use, the AWS resources (ie, st
 
 These instructions will guide you through your first job in NeuroStack. The goal of this example is to introduce you to NeuroStack by running a simple job converting a T1 anatomical MRI file from a nifti file type (.nii) to an AFNI file type(.BRIK and .HEAD). The job should only take a few minutes to run.
 
-1. Download the template script(neurostack_script.sh) and the test structural imaging file (test.nii) from theNeuroStack GitHub repo (https://github.com/hddsilva/NeuroStack)
+1. Download the template script(neurostack_script.sh) and the test structural imaging file (test.nii) from the NeuroStack GitHub repo (https://github.com/hddsilva/NeuroStack)
 2. Upload the template script (neurostack_script.sh) to the neurostack-script S3 bucket in your AWS account.
 3. Upload your input data (test.nii) to the neurostack-input S3 bucket. Uploading to the neurostack-input S3 bucket will trigger the uploaded file to process according to the template script.
 4. (Optional) You can watch your job process through AWS Batch by going to the Batch console in your AWS account. Your job will move from "Submitted" to "Running". When it has moved to either "Succeeded" or "Failed", your job has finished running.
@@ -42,6 +42,10 @@ Uploading any file to the neurostack-input S3 bucket will trigger that file to b
 ### Spot vs On-demand EC2 instances
 
 By default, NeuroStack will run Spot EC2 instances. Spot leverages AWS's excess compute capacity to substantially reduce compute costs. When you use Spot instances, you may need to wait for compute capacity to become available and your job may be terminated early if your compute resource is at capacity. In return, the cost of your EC2 usage is reduced by up to 90%. Otherwise, you can configure NeuroStack to run On-demand EC2 instances by navigating to the AWS Batch console under the "Job queues" tab and editing the "neurostack-jobqueue" to connect to the "neurostack-ondemand" compute environment, instead of "neurostack-spot". After your change has finished updating, your jobs will run using On-demand instances. Your jobs will begin immediately upon request and will not be terminated due to capacity, but AWS will charge full price.
+
+### Modifying the storage volume of your instance
+
+When you run jobs in NeuroStack, your EC2 instance will be attached to a certain amount of storage for storing and writing files for your job. This is separate from your S3 storage buckets. NeuroStack provisions 100 GiB of storage on your instance by default. If your job requires more storage, you may find that your job fails because it cannot write any more files to the instance. You can test this by adding the command "df -kh" at the end of your neurostack_script.sh to view your instance's storage capacity. If you do need additional storage on your instances, this is easy to adjust in NeuroStack. First, download the NeuroStack.yaml file from the NeuroStack GitHub repo (https://github.com/hddsilva/NeuroStack) and open it in a text editor. Find the "VolumeSize: 100" line in the "/dev/sda1" Launch Template specifications (line 135 as of the writing of these instructions). Adjust to your desired GiB of storage. Next, navigate to the AWS CloudFormation console. Select NeuroStack from your Stacks and choose "Update". Choose "Replace current template", "Upload a template file", and upload your modified version of the NeuroStack.yaml file. The instances you initiate after this will have your given GiB of storage.
 
 ## Tips for Using NeuroStack
 
