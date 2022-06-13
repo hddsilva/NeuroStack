@@ -2,6 +2,8 @@
   <img src="https://github.com/hddsilva/NeuroStack/blob/main/logo_NeuroStack.png" width="200" height="170" />
 </p>
 
+<a href="https://zenodo.org/badge/latestdoi/421485261"><img src="https://zenodo.org/badge/421485261.svg" alt="DOI"></a>
+
 NeuroStack allows you to easily run neuroimaging workflows using AWS cloud computing. It is designed to set up the AWS infrastructure needed to perform neuroimaging analysis at scale. NeuroStack is built with the NITRC Compute Environment (NITRC-CE), which allows users to access all of the neuroimaging software pre-installed in NITRC-CE (see https://www.nitrc.org/projects/nitrc es/ for a complete list).
 
 To use NeuroStack, first install NeuroStack in your AWS account. Modify the template script according to your needs and upload it to the neurostack-script S3 bucket. Add your input data to the neurostack-input S3 bucket. When your job has finished, your processed data will be automatically uploaded to the neurostack-output S3 bucket.
